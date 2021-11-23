@@ -23,6 +23,7 @@ namespace ProtoBuf.MessagePipeTests
         private readonly ITestOutputHelper _log;
         private void Log(string message)
         {
+            Console.WriteLine($"{Time()} ({Thread.CurrentThread.ManagedThreadId} {(Thread.CurrentThread.IsThreadPoolThread ? "P" : "U")}): {message}");
             if (_log != null)
             {
                 lock (_log)
