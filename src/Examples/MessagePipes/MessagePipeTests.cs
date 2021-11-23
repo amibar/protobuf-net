@@ -42,19 +42,24 @@ namespace ProtoBuf.MessagePipeTests
 
             var options = new MessagePipeOptions(
 #if DEBUG
-                log: Log,
+                log: Log
 #endif
-                pipeOptions: new System.IO.Pipelines.PipeOptions(null, PipeScheduler.Inline, PipeScheduler.Inline)
             );
 
             Log("Creating server...");
             using (var server = new NamedPipeServerStream(name, PipeDirection.In, 1, PipeTransmissionMode.Byte,
                 PipeOptions.Asynchronous | PipeOptions.WriteThrough))
             {
+                TaskCompletionSource<bool> serverStarted = new TaskCompletionSource<bool>();
+
                 var receive = Task.Run(async () =>
                 {
+                    Log("[Server] started...");
+                    serverStarted.SetResult(true);
+
                     Log("[Server] waiting for connection...");
                     await server.WaitForConnectionAsync();
+
                     Log($"[Server] connected; receiving...");
 
                     await foreach (var message in MessagePipe.ReceiveAsync<Message>(server, options))
@@ -69,6 +74,9 @@ namespace ProtoBuf.MessagePipeTests
                 using (var client = new NamedPipeClientStream(".", name, PipeDirection.Out,
                     PipeOptions.Asynchronous | PipeOptions.WriteThrough))
                 {
+                    Log("[Client] waiting for server to start...");
+                    await serverStarted.Task;
+
                     Log("[Client] connecting...");
                     await client.ConnectAsync();
                     Log("[Client] connected");
@@ -131,8 +139,13 @@ namespace ProtoBuf.MessagePipeTests
             using (var server = new NamedPipeServerStream(name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
                 PipeOptions.Asynchronous | PipeOptions.WriteThrough))
             {
+                TaskCompletionSource<bool> serverStarted = new TaskCompletionSource<bool>();
+
                 var receive = Task.Run(async () =>
                 {
+                    Log("[Server] started...");
+                    serverStarted.SetResult(true);
+
                     Log("[Server] waiting for connection...");
                     await server.WaitForConnectionAsync();
 
@@ -153,6 +166,9 @@ namespace ProtoBuf.MessagePipeTests
                 using (var client = new NamedPipeClientStream(".", name, PipeDirection.InOut,
                     PipeOptions.Asynchronous | PipeOptions.WriteThrough))
                 {
+                    Log("[Client] waiting for server to start...");
+                    await serverStarted.Task;
+
                     Log("[Client] connecting...");
                     await client.ConnectAsync();
                     await using var send = MessagePipe.DuplexAsync<Ping, Pong>(client, options);
