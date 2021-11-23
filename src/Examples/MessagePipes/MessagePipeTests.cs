@@ -51,14 +51,13 @@ namespace ProtoBuf.MessagePipeTests
             using (var server = new NamedPipeServerStream(name, PipeDirection.In, 1, PipeTransmissionMode.Byte,
                 PipeOptions.Asynchronous | PipeOptions.WriteThrough))
             {
-                async Task ServerProc()
+                var receive = Task.Run(async () =>
                 {
                     Log("[Server] starting...");
                     await Task.Delay(1);
 
                     Log("[Server] waiting for connection...");
                     await server.WaitForConnectionAsync();
-
                     Log($"[Server] connected; receiving...");
 
                     await foreach (var message in MessagePipe.ReceiveAsync<Message>(server, options))
@@ -66,11 +65,8 @@ namespace ProtoBuf.MessagePipeTests
                         Log($"[Server] received message {message.Id}");
                         received.Add(message);
                     }
-
                     Log("[Server] completed");
-                }
-
-                var receive = ServerProc();
+                });
 
                 Log("Creating client...");
                 using (var client = new NamedPipeClientStream(".", name, PipeDirection.Out,
@@ -138,7 +134,7 @@ namespace ProtoBuf.MessagePipeTests
             using (var server = new NamedPipeServerStream(name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
                 PipeOptions.Asynchronous | PipeOptions.WriteThrough))
             {
-                async Task ServerProc()
+                var receive = Task.Run(async () =>
                 {
                     Log("[Server] starting...");
                     await Task.Delay(1);
@@ -157,9 +153,7 @@ namespace ProtoBuf.MessagePipeTests
                     //    Log($"[Server] replied");
                     //}
                     Log("[Server] done");
-                }
-
-                var receive = ServerProc();
+                });
 
                 Log("Creating client...");
                 using (var client = new NamedPipeClientStream(".", name, PipeDirection.InOut,
