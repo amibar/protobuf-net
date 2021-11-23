@@ -33,6 +33,71 @@ namespace ProtoBuf.MessagePipeTests
         }
 
         [Fact]
+        public async Task BasicPipe()
+        {
+            var name = Guid.NewGuid().ToString();
+
+            int receivedBytes = 0;
+
+            Log("Creating server...");
+            using (var server = new NamedPipeServerStream(name, PipeDirection.In, 1, PipeTransmissionMode.Byte,
+                       PipeOptions.Asynchronous | PipeOptions.WriteThrough))
+            {
+                var receive = Task.Run(async () =>
+                {
+                    var buffer = new byte[1];
+
+                    Log("[Server] waiting for connection...");
+                    await server.WaitForConnectionAsync();
+
+                    Log($"[Server] connected; receiving...");
+
+                    while(true)
+                    {
+                        int bytesRead = await server.ReadAsync(buffer, 0, 1);
+                        Log($"[Server] got {bytesRead} bytes {(bytesRead > 0 ? buffer[0].ToString() : "so quiting")}");
+
+                        if (bytesRead == 0)
+                            break;
+
+                        ++receivedBytes;
+                    }
+                });
+
+                Log("Creating client...");
+                using (var client = new NamedPipeClientStream(".", name, PipeDirection.Out,
+                    PipeOptions.Asynchronous | PipeOptions.WriteThrough))
+                {
+                    Log("[Client] connecting...");
+                    await client.ConnectAsync();
+                    Log("[Client] connected");
+
+                    var buffer = new byte[] { 97, 98, 99 };
+
+                    Log("[Client] writing byte 1...");
+                    await client.WriteAsync(buffer, 0, 1);
+
+                    Log("[Client] writing byte 2...");
+                    await client.WriteAsync(buffer, 1, 1);
+
+                    Log("[Client] writing byte 3...");
+                    await client.WriteAsync(buffer, 2, 1);
+
+                    Log("[Client] flushing...");
+                    await client.FlushAsync();
+                } // client is toast
+                Log("[Client] end");
+
+                // wait for server to exit
+                await WithTimeout(receive, TimeSpan.FromSeconds(300), "receive");
+            } // server is toast
+            Log("[Server] end");
+
+            // detect all received
+            Assert.Equal(3, receivedBytes);
+        }
+
+        [Fact]
         public async Task SimpleMessagePipe()
         {
             var name = Guid.NewGuid().ToString();
