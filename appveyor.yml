@@ -19,7 +19,7 @@ nuget:
 
 build_script:
   - cmd: dotnet build Build.csproj -c Release /p:CI=true /p:GeneratePackageOnBuild=false
-  - cmd: dotnet test Build.csproj -c Release /p:CI=true
+  - cmd: dotnet test Build.csproj -c Release /p:CI=true /p:GeneratePackageOnBuild=false
 
 test: off
 artifacts:
