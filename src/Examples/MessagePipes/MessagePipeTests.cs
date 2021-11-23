@@ -84,14 +84,14 @@ namespace ProtoBuf.MessagePipeTests
                     channel.Writer.Complete();
                     Log("[Client] awaiting send completion...");
 
-                    await WithTimeout(send.AsTask(), TimeSpan.FromSeconds(5), "send"); // all sent
+                    await WithTimeout(send.AsTask(), TimeSpan.FromSeconds(300), "send"); // all sent
 
                     await client.FlushAsync();
                 } // client is toast
                 Log("[Client] end");
 
                 // wait for server to exit
-                await WithTimeout(receive, TimeSpan.FromSeconds(5), "receive");
+                await WithTimeout(receive, TimeSpan.FromSeconds(300), "receive");
             } // server is toast
             Log("[Server] end");
 
@@ -160,7 +160,7 @@ namespace ProtoBuf.MessagePipeTests
                         var ping = new Ping { Token = i };
                         Log($"[Client] sending ping {ping?.Token}...");
                         var pongPending = send.UnaryAsync(ping).AsTask();
-                        await WithTimeout(pongPending, TimeSpan.FromSeconds(5), "UnaryAsync");
+                        await WithTimeout(pongPending, TimeSpan.FromSeconds(300), "UnaryAsync");
                         var pong = await pongPending;
                         Log($"[Client] received pong {pong?.Token}...");
                         Assert.Equal(i, pong.Token);
@@ -169,7 +169,7 @@ namespace ProtoBuf.MessagePipeTests
                 Log("[Client] end");
 
                 // wait for server to exit
-                await WithTimeout(receive, TimeSpan.FromSeconds(5), "receive");
+                await WithTimeout(receive, TimeSpan.FromSeconds(300), "receive");
             } // server is toast
             Log("[Server] end");
         }
