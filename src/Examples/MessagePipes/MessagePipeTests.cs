@@ -2,11 +2,13 @@
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.IO.Pipes;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using PipeOptions = System.IO.Pipes.PipeOptions;
 
 namespace ProtoBuf.MessagePipeTests
 {
@@ -40,8 +42,9 @@ namespace ProtoBuf.MessagePipeTests
 
             var options = new MessagePipeOptions(
 #if DEBUG
-                log: Log
+                log: Log,
 #endif
+                pipeOptions: new System.IO.Pipelines.PipeOptions(null, PipeScheduler.Inline, PipeScheduler.Inline)
             );
 
             Log("Creating server...");
@@ -75,7 +78,7 @@ namespace ProtoBuf.MessagePipeTests
 
                     Log("[Client] writing message 1...");
                     await channel.Writer.WriteAsync(new Message { Id = 1, Foo = "abc", Bar = 1.0 });
-                    Log("[Client] writing message 3...");
+                    Log("[Client] writing message 2...");
                     await channel.Writer.WriteAsync(new Message { Id = 2, Foo = "def", Bar = 2.0 });
                     Log("[Client] writing message 3...");
                     await channel.Writer.WriteAsync(new Message { Id = 3, Foo = "ghi", Bar = 3.0 });
