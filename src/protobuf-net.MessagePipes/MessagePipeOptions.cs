@@ -35,9 +35,9 @@ namespace ProtoBuf.MessagePipes
         public MessagePipeOptions(TypeModel typeModel = default, CancellationToken cancellationToken = default,
             MessagePipeFlags flags = MessagePipeFlags.None, PipeOptions pipeOptions = default,
             object userState = default, long maxMessageSize = default
-//#if DEBUG
+#if DEBUG
             , Action<string> log = default
-//#endif
+#endif
             )
         {
             TypeModel = typeModel;
@@ -46,9 +46,9 @@ namespace ProtoBuf.MessagePipes
             UserState = userState;
             MaxMessageSize = maxMessageSize;
             Flags = flags;
-//#if DEBUG
+#if DEBUG
             Log = log;
-//#endif
+#endif
         }
 
         /// <summary>
@@ -82,16 +82,16 @@ namespace ProtoBuf.MessagePipes
         /// </summary>
         public long MaxMessageSize { get; }
 
-//#if DEBUG
+#if DEBUG
         public Action<string> Log { get; }
-//#endif
+#endif
         internal MessagePipeOptions Normalize()
             => new MessagePipeOptions(TypeModel ?? TypeModel.DefaultModel, CancellationToken, Flags,
                 PipeOptions ?? PipeOptions.Default, UserState,
                 MaxMessageSize <= 0 ? DefaultMaxMessageSize : MaxMessageSize
-//#if DEBUG
+#if DEBUG
                 , Log
-//#endif
+#endif
                 );
 
         internal MessagePipeOptions Without(MessagePipeFlags flags)
@@ -99,9 +99,9 @@ namespace ProtoBuf.MessagePipes
                 Flags & ~flags,
                 PipeOptions, UserState,
                 MaxMessageSize
-//#if DEBUG
+#if DEBUG
                 , Log
-//#endif
+#endif
                 );
 
         const long DefaultMaxMessageSize = 2 * 1024 * 1024; // 2 MiB by default, a fair limit

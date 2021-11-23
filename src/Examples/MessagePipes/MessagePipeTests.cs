@@ -2,14 +2,12 @@
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
-using System.IO.Pipelines;
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using PipeOptions = System.IO.Pipes.PipeOptions;
 
 namespace ProtoBuf.MessagePipeTests
 {
@@ -42,9 +40,9 @@ namespace ProtoBuf.MessagePipeTests
             var received = new List<Message>();
 
             var options = new MessagePipeOptions(
-//#if DEBUG
+#if DEBUG
                 log: Log
-//#endif
+#endif
             );
 
             Log("Creating server...");
@@ -53,9 +51,6 @@ namespace ProtoBuf.MessagePipeTests
             {
                 var receive = Task.Run(async () =>
                 {
-                    Log("[Server] starting...");
-                    await Task.Delay(1);
-
                     Log("[Server] waiting for connection...");
                     await server.WaitForConnectionAsync();
                     Log($"[Server] connected; receiving...");
@@ -125,9 +120,9 @@ namespace ProtoBuf.MessagePipeTests
             RuntimeTypeModel.Initialize();
 
             var options = new MessagePipeOptions(
-//#if DEBUG
+#if DEBUG
                 log: Log
-//#endif
+#endif
             );
 
             Log("Creating server...");
@@ -136,9 +131,6 @@ namespace ProtoBuf.MessagePipeTests
             {
                 var receive = Task.Run(async () =>
                 {
-                    Log("[Server] starting...");
-                    await Task.Delay(1);
-
                     Log("[Server] waiting for connection...");
                     await server.WaitForConnectionAsync();
 
