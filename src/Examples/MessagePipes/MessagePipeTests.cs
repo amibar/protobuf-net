@@ -2,7 +2,9 @@
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Pipes;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -21,14 +23,14 @@ namespace ProtoBuf.MessagePipeTests
         private static TimeSpan Time() => DateTime.UtcNow - _start;
 
         private readonly ITestOutputHelper _log;
-        private void Log(string message)
+        private void Log(string message, [CallerMemberName] string callerMemberName = null)
         {
-            Console.WriteLine($"{Time()} ({Thread.CurrentThread.ManagedThreadId} {(Thread.CurrentThread.IsThreadPoolThread ? "P" : "U")}): {message}");
+            Console.WriteLine($"{Time()} {callerMemberName} ({Process.GetCurrentProcess().Id}:{Thread.CurrentThread.ManagedThreadId} {(Thread.CurrentThread.IsThreadPoolThread ? "P" : "U")}): {message}");
             if (_log != null)
             {
                 lock (_log)
                 {
-                    _log.WriteLine($"{Time()} ({Thread.CurrentThread.ManagedThreadId} {(Thread.CurrentThread.IsThreadPoolThread ? "P" : "U")}): {message}");
+                    _log.WriteLine($"{Time()} {callerMemberName} ({Process.GetCurrentProcess().Id}:{Thread.CurrentThread.ManagedThreadId} {(Thread.CurrentThread.IsThreadPoolThread ? "P" : "U")}): {message}");
                 }
             }
         }
@@ -107,7 +109,7 @@ namespace ProtoBuf.MessagePipeTests
 
             var options = new MessagePipeOptions(
 #if DEBUG
-                log: Log
+                log: v => Log(v)
 #endif
             );
 
@@ -187,7 +189,7 @@ namespace ProtoBuf.MessagePipeTests
 
             var options = new MessagePipeOptions(
 #if DEBUG
-                log: Log
+                log: v => Log(v)
 #endif
             );
 

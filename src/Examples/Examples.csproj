@@ -14,6 +14,94 @@
     <DefineConstants>$(DefineConstants);FEAT_COMPILER;FX30;NO_INTERNAL_CONTEXT;PLAT_SPANS;EMIT_DLL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Issues\**" />
+    <Compile Remove="NWind\**" />
+    <Compile Remove="Ppt\**" />
+    <Compile Remove="ProtoGen\**" />
+    <Compile Remove="Remoting\**" />
+    <Compile Remove="Rpc\**" />
+    <Compile Remove="ServiceModel\**" />
+    <Compile Remove="SimpleStream\**" />
+    <Compile Remove="TestNumbers\**" />
+    <EmbeddedResource Remove="Issues\**" />
+    <EmbeddedResource Remove="NWind\**" />
+    <EmbeddedResource Remove="Ppt\**" />
+    <EmbeddedResource Remove="ProtoGen\**" />
+    <EmbeddedResource Remove="Remoting\**" />
+    <EmbeddedResource Remove="Rpc\**" />
+    <EmbeddedResource Remove="ServiceModel\**" />
+    <EmbeddedResource Remove="SimpleStream\**" />
+    <EmbeddedResource Remove="TestNumbers\**" />
+    <None Remove="Issues\**" />
+    <None Remove="NWind\**" />
+    <None Remove="Ppt\**" />
+    <None Remove="ProtoGen\**" />
+    <None Remove="Remoting\**" />
+    <None Remove="Rpc\**" />
+    <None Remove="ServiceModel\**" />
+    <None Remove="SimpleStream\**" />
+    <None Remove="TestNumbers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Arrays.cs" />
+    <Compile Remove="AutoFields.cs" />
+    <Compile Remove="AutoTuple.cs" />
+    <Compile Remove="Callbacks.cs" />
+    <Compile Remove="ComparisonToNDCS.cs" />
+    <Compile Remove="CoreFxHacks.cs" />
+    <Compile Remove="DataMemberOffset.cs" />
+    <Compile Remove="DesignIdeas\Inheritance.cs" />
+    <Compile Remove="DetectMissing.cs" />
+    <Compile Remove="DictionaryTests.cs" />
+    <Compile Remove="DiscriminatedUnions.cs" />
+    <Compile Remove="DynamicIFormatter.cs" />
+    <Compile Remove="EnumTests.cs" />
+    <Compile Remove="ExportEverything.cs" />
+    <Compile Remove="ExtendedTimeTests.cs" />
+    <Compile Remove="Extensibility.cs" />
+    <Compile Remove="Fields.cs" />
+    <Compile Remove="GuidTests.cs" />
+    <Compile Remove="ImmutableCollections.cs" />
+    <Compile Remove="Inheritance.cs" />
+    <Compile Remove="InheritanceMidLevel.cs" />
+    <Compile Remove="InternerTests.cs" />
+    <Compile Remove="ItemsWithLengthPrefix.cs" />
+    <Compile Remove="ListAsInterfaceTests.cs" />
+    <Compile Remove="ListsWithInheritance.cs" />
+    <Compile Remove="ListTests.cs" />
+    <Compile Remove="memcached.cs" />
+    <Compile Remove="MultiTypesWithLengthPrefix.cs" />
+    <Compile Remove="NetObjectOptions.cs" />
+    <Compile Remove="NonGeneric.cs" />
+    <Compile Remove="NonPublic_Compile.cs" />
+    <Compile Remove="NonSeekableStreams.cs" />
+    <Compile Remove="OldProgram.cs" />
+    <Compile Remove="OptionalData.cs" />
+    <Compile Remove="Parseable.cs" />
+    <Compile Remove="PartialClasses.cs" />
+    <Compile Remove="person.cs" />
+    <Compile Remove="PEVerify.cs" />
+    <Compile Remove="Pipeline.cs" />
+    <Compile Remove="Primatives.cs" />
+    <Compile Remove="PrimativeSerializationTests.cs" />
+    <Compile Remove="Program.cs" />
+    <Compile Remove="ProtoGeneration.cs" />
+    <Compile Remove="Recursion.cs" />
+    <Compile Remove="Remoting.cs" />
+    <Compile Remove="Rpc.cs" />
+    <Compile Remove="RpcTest.cs" />
+    <Compile Remove="ShadowSetters.cs" />
+    <Compile Remove="StupidlyComplexModel.cs" />
+    <Compile Remove="TagInference.cs" />
+    <Compile Remove="TraceError.cs" />
+    <Compile Remove="Tuples.cs" />
+    <Compile Remove="Type.cs" />
+    <Compile Remove="TypeFactory.cs" />
+    <Compile Remove="UnwrappedOuters.cs" />
+    <Compile Remove="ValueWrapper.cs" />
+    <Compile Remove="WcfProtoBridge.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\protobuf-net.MessagePipes\protobuf-net.MessagePipes.csproj" />
     <ProjectReference Include="..\protobuf-net\protobuf-net.csproj" />
     <ProjectReference Include="..\protobuf-net.Reflection\protobuf-net.Reflection.csproj" />
@@ -57,8 +145,6 @@
     <None Include="..\Tools\nwind.proto.bin" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Issues\Issue647.Generated.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    <Folder Include="DesignIdeas\" />
   </ItemGroup>
 </Project>
